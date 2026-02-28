@@ -1,0 +1,14 @@
+{
+  "imports": {
+    "hono": "npm:hono@4",
+    "hono/cors": "npm:hono@4/cors",
+    "@anthropic-ai/sdk": "npm:@anthropic-ai/sdk",
+    "@db/sqlite": "jsr:@db/sqlite@^0.13",
+    "@std/path": "jsr:@std/path",
+    "@std/fs": "jsr:@std/fs",
+    "@std/fs/walk": "jsr:@std/fs/walk"
+  },
+  "tasks": {
+    "dev": "deno run --allow-all --watch main.ts"
+  }
+}

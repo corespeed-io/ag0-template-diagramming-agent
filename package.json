@@ -1,27 +1,14 @@
 {
   "name": "ag0-template-diagramming-agent",
-  "version": "0.1.0",
-  "description": "AI diagramming agent — chat left, Excalidraw right",
+  "version": "1.0.0",
+  "private": true,
   "scripts": {
-    "ui:dev": "vite",
-    "agent:dev": "deno run --allow-all --env-file server/main.ts",
+    "ui:dev": "cd ui && pnpm install && pnpm dev",
+    "agent:dev": "VITE_PORT=5173 deno run --allow-all --env main.ts",
     "dev:all": "concurrently --names \"ui,agent\" -c cyan,magenta \"bun run ui:dev\" \"bun run agent:dev\"",
-    "dev": "bun run dev:all",
-    "build:client": "vite build",
-    "build": "bun run build:client"
-  },
-  "dependencies": {
-    "@excalidraw/excalidraw": "^0.17.6"
+    "dev": "bun run dev:all"
   },
   "devDependencies": {
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
-    "@vitejs/plugin-react": "^4.3.4",
-    "concurrently": "^9.1.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "typescript": "^5.7.3",
-    "vite": "^6.1.0"
-  },
-  "type": "module"
+    "concurrently": "^9.1.2"
+  }
 }

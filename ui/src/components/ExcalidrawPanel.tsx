@@ -1,17 +1,22 @@
-import { useEffect } from "react";
-import { ExcalidrawEditor } from "./ExcalidrawEditor.tsx";
+import { useEffect, type Ref } from "react";
+import {
+  ExcalidrawEditor,
+  type ExcalidrawEditorHandle,
+} from "./ExcalidrawEditor.tsx";
 import { useAutoSave } from "@/hooks/useAutoSave.ts";
 
 interface Props {
   currentFile: string | null;
   setCurrentFile: (f: string | null) => void;
   wsEvent: MessageEvent | null;
+  editorRef?: Ref<ExcalidrawEditorHandle>;
 }
 
 export default function ExcalidrawPanel({
   currentFile,
   setCurrentFile,
   wsEvent,
+  editorRef,
 }: Props) {
   const { onChange: autoSaveOnChange, lastSaveTimeRef } =
     useAutoSave(currentFile);
@@ -69,6 +74,7 @@ export default function ExcalidrawPanel({
         wsEvent={wsEvent}
         onChange={autoSaveOnChange}
         lastSaveTimeRef={lastSaveTimeRef}
+        editorRef={editorRef}
       />
     </div>
   );

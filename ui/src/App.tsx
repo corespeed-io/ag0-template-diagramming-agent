@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Trash2Icon } from "lucide-react";
 import {
   Conversation,
@@ -40,6 +40,7 @@ import {
   useAgentContext,
 } from "@/lib/zypher-ui";
 import ExcalidrawPanel from "@/components/ExcalidrawPanel.tsx";
+import type { ExcalidrawEditorHandle } from "@/components/ExcalidrawEditor.tsx";
 
 const client = new TaskApiClient({
   baseUrl:
@@ -56,6 +57,12 @@ function App() {
   const [currentFile, setCurrentFile] = useState<string | null>(null);
   const [wsEvent, setWsEvent] = useState<MessageEvent | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
+  const editorRef = useRef<ExcalidrawEditorHandle>(null);
+
+  const handleClearCanvas = useCallback(() => {
+    editorRef.current?.clearCanvas();
+    setCurrentFile(null);
+  }, []);
 
   useEffect(() => {
     let reconnectTimer: ReturnType<typeof setTimeout>;
@@ -90,7 +97,7 @@ function App() {
         <div className="flex flex-col w-[420px] min-w-80 border-r">
           <ChatUI
             currentFile={currentFile}
-            onClear={() => setCurrentFile(null)}
+            onClear={handleClearCanvas}
           />
         </div>
 
@@ -100,6 +107,7 @@ function App() {
             currentFile={currentFile}
             setCurrentFile={setCurrentFile}
             wsEvent={wsEvent}
+            editorRef={editorRef}
           />
         </div>
       </div>

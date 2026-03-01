@@ -1,7 +1,14 @@
-import { useEffect, useState, type MutableRefObject } from "react";
+import {
+  useEffect,
+  useState,
+  useImperativeHandle,
+  type MutableRefObject,
+  type Ref,
+} from "react";
 import "@excalidraw/excalidraw/index.css";
 import { Excalidraw } from "@excalidraw/excalidraw";
 import type { ExcalidrawElement } from "@excalidraw/excalidraw/element/types";
+import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types";
 import type { AppState, BinaryFiles } from "@excalidraw/excalidraw/types";
 import { Spinner } from "@/components/ui/spinner.tsx";
 
@@ -13,6 +20,10 @@ interface ExcalidrawFile {
   files: BinaryFiles;
 }
 
+export interface ExcalidrawEditorHandle {
+  clearCanvas: () => void;
+}
+
 interface ExcalidrawEditorProps {
   filePath: string;
   wsEvent: MessageEvent | null;
@@ -22,6 +33,7 @@ interface ExcalidrawEditorProps {
     files: BinaryFiles,
   ) => void;
   lastSaveTimeRef: MutableRefObject<number>;
+  editorRef?: Ref<ExcalidrawEditorHandle>;
 }
 
 export function ExcalidrawEditor({
@@ -29,7 +41,22 @@ export function ExcalidrawEditor({
   wsEvent,
   onChange,
   lastSaveTimeRef,
+  editorRef,
 }: ExcalidrawEditorProps) {
+  const [excalidrawAPI, setExcalidrawAPI] =
+    useState<ExcalidrawImperativeAPI | null>(null);
+
+  useImperativeHandle(
+    editorRef,
+    () => ({
+      clearCanvas: () => {
+        if (excalidrawAPI) {
+          excalidrawAPI.resetScene();
+        }
+      },
+    }),
+    [excalidrawAPI],
+  );
   const [initialData, setInitialData] = useState<ExcalidrawFile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -106,6 +133,7 @@ export function ExcalidrawEditor({
     <div className="flex-1 h-full overflow-hidden">
       <Excalidraw
         key={key}
+        excalidrawAPI={(api) => setExcalidrawAPI(api)}
         initialData={{
           elements: initialData?.elements ?? [],
           appState: {

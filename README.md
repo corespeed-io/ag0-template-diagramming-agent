@@ -1,5 +1,7 @@
 # AG0 Template: Diagramming Agent
 
+![alt text](image.png)
+
 AI diagramming agent with a split-panel UI: Zypher Agent chat on the left,
 Excalidraw editor on the right.
 
